@@ -1,78 +1,83 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
-using Unity.Services.Core;
-using Unity.Services.Authentication;
-using Unity.Services.Multiplayer;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
-using TMPro;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
+using Unity.Services.Multiplayer;
+using UnityEngine;
 
 public class MultiplayerManager : MonoBehaviour
 {
-    // Multiplayer Management
     private ISession session;
-    [SerializeField]
-    public String queueName;
-    public int maxPlayers;
+    [SerializeField] private string queueName = "RaceQueue";
+    [SerializeField] private int maxPlayers = 3;
+    private bool busy;
 
-    // Starting UI
-    [SerializeField]
-    public GameObject startPanel;
-    [SerializeField]
-    public TextMeshProUGUI startStatusText;
-
-    // Replay UI
-    [SerializeField]
-    public GameObject replayPanel;
-    [SerializeField]
-    public TextMeshProUGUI replayStatusText;
+    public string Status { get; private set; } = "Initializing...";
+    public event Action<string> StatusChanged;
+    public event Action SessionJoined;
 
     async void Start()
     {
-        // Display Panels
-        startPanel.SetActive(true);
-        replayPanel.SetActive(false);
-
-        startStatusText.text = "Initializing Unity Services...";
+        SetStatus("Initializing...");
         try
         {
             await UnityServices.InitializeAsync();
-            startStatusText.text = "Signing in...";
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            startStatusText.text = "Initialized! Press start to enter matchmaking.";
+            SetStatus("Ready");
         }
         catch (Exception e)
         {
-            startStatusText.text = "Failed to initialize Unity Services: " + e.Message;
+            SetStatus(e.Message);
         }
     }
 
-    public async void StartMatchmaking(bool isStartOrReplay)
+    public async void StartMatchmaking()
     {
-        if (isStartOrReplay)
+        if (busy || !AuthenticationService.Instance.IsSignedIn) return;
+        busy = true;
+        SetStatus("Finding players...");
+        try
         {
-            startStatusText.text = "Starting matchmaking...";
+            if (session != null) await session.LeaveAsync();
+            session = await MultiplayerService.Instance.MatchmakeSessionAsync(
+                new MatchmakerOptions { QueueName = queueName },
+                new SessionOptions { MaxPlayers = maxPlayers }.WithRelayNetwork(),
+                CancellationToken.None);
+            SessionJoined?.Invoke();
         }
-        else
+        catch (Exception e)
         {
-            replayStatusText.text = "Starting matchmaking...";
+            SetStatus(e.Message);
         }
-        
-        var matchmakerOptions = new MatchmakerOptions { QueueName = queueName };
-        var sessionOptions = new SessionOptions { MaxPlayers = maxPlayers }.WithRelayNetwork();
-        var matchmakerCancellationSource = new CancellationTokenSource();
+        finally
+        {
+            busy = false;
+        }
+    }
 
-        session = await MultiplayerService.Instance.MatchmakeSessionAsync(matchmakerOptions, sessionOptions, matchmakerCancellationSource.Token);
-    
-        if (isStartOrReplay)
+    public async void Leave()
+    {
+        if (busy || session == null) return;
+        busy = true;
+        try
         {
-            startPanel.SetActive(false);
+            await session.LeaveAsync();
+            session = null;
+            SetStatus("Ready");
         }
-        else
+        catch (Exception e)
         {
-            replayPanel.SetActive(false);
+            SetStatus(e.Message);
         }
+        finally
+        {
+            busy = false;
+        }
+    }
+
+    private void SetStatus(string value)
+    {
+        Status = value;
+        StatusChanged?.Invoke(value);
     }
 }
