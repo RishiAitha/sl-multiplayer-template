@@ -44,4 +44,4 @@ These scenes use the existing generic tools to create a full game loop.
 
 ### SLRTk
 
-You will need to get access and import the package for SLRTk independently.
+You will need to get access and import the package for SLRTk independently. Once you do import it, the GameSLRSample will be useable to handle sign input detection for game progress. Please do not commit or edit anything within the package itself. More guidance on the SLRTk package can be found in its documentation!
