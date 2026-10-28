@@ -43,7 +43,19 @@ These scenes use the existing generic tools to create a full game loop.
 - Do take note of scripts like `RaceCar.cs`. These are the NetworkBehaviour scripts that run on Netcode player prefabs.
     - This one instantiates cars in different positions and with different sprites based on the player order, then handles movement across clients.
     - These scripts are the ones you will most heavily need to modify to accomodate whatever custom game logic you have. (you can edit the others still, of course)
+- Other Examples: BattleGame
 
 ### SLRTk
 
 You will need to get access and import the package for SLRTk independently. Once you do import it, the GameSLRSample will be useable to handle sign input detection for game progress. Please do not commit or edit anything within the package itself. More guidance on the SLRTk package can be found in its documentation!
+
+---
+
+#### Assets Used
+
+- 2D Characters - Casual Monsters
+    - LAYERLAB
+- Free Casual GUI
+    - Sky Den Games
+- 2D Race Cars
+    - looneybits

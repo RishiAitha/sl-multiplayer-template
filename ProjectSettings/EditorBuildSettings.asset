@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/RacingGame/Scenes/RacingGame.unity
     guid: 104da15353252ee998d7fc7a1429dd3b
+  - enabled: 1
+    path: Assets/BattleGame/Scenes/BattleGame.unity
+    guid: 04ae26317a7b45b9bc90832522e623a1
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

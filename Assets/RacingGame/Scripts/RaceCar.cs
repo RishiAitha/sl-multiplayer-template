@@ -8,7 +8,6 @@ public class RaceCar : NetworkBehaviour
     [SerializeField] private float stepDistance = 0.7f;
 
     private readonly NetworkVariable<int> lane = new NetworkVariable<int>();
-    private readonly NetworkVariable<bool> won = new NetworkVariable<bool>();
     private SpriteRenderer spriteRenderer;
     private WordBank wordBank;
 
@@ -33,27 +32,28 @@ public class RaceCar : NetworkBehaviour
 
         lane.OnValueChanged += OnLaneChanged;
         wordBank.ProgressChanged += OnProgressChanged;
-        won.OnValueChanged += OnWonChanged;
         UpdateCar();
-        if (won.Value) ShowResult();
     }
 
     public override void OnNetworkDespawn()
     {
         lane.OnValueChanged -= OnLaneChanged;
         wordBank.ProgressChanged -= OnProgressChanged;
-        won.OnValueChanged -= OnWonChanged;
     }
 
-    private void OnLaneChanged(int previous, int current) => UpdateCar();
+    private void OnLaneChanged(int previous, int current)
+    {
+        UpdateCar();
+    }
+
     private void OnProgressChanged(int previous, int current)
     {
         UpdateCar();
-        if (IsServer && current >= wordBank.WordCount) won.Value = true;
-    }
-    private void OnWonChanged(bool previous, bool current)
-    {
-        if (current) ShowResult();
+
+        if (current >= wordBank.WordCount)
+        {
+            GameOver();
+        }
     }
 
     private void UpdateCar()
@@ -62,8 +62,8 @@ public class RaceCar : NetworkBehaviour
         transform.position = new Vector3((lane.Value - 1) * laneSpacing, -3f + wordBank.Progress * stepDistance, 0f);
     }
 
-    private void ShowResult()
+    private void GameOver()
     {
-        FindFirstObjectByType<SessionMenu>().ShowResult(IsOwner);
+        FindFirstObjectByType<SessionMenu>().GameOver(IsOwner);
     }
 }

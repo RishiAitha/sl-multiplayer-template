@@ -66,10 +66,10 @@ public class SessionMenu : MonoBehaviour
         startPanel.SetActive(true);
     }
 
-    public void ShowResult(bool won)
+    public void GameOver(bool isWinner)
     {
         gameMenu.SetActive(false);
-        result.text = won ? "You win!" : "You lose!";
+        result.text = isWinner ? "You win!" : "You lose!";
         leaveButtonObject.SetActive(false);
         replayPanel.SetActive(true);
     }
