@@ -17,10 +17,12 @@ public class SessionMenu : MonoBehaviour
     [SerializeField] private Button leaveButton;
 
     private MultiplayerManager multiplayer;
+    private GameObject gameMenu;
 
     private void Start()
     {
         multiplayer = FindFirstObjectByType<MultiplayerManager>();
+        gameMenu = FindFirstObjectByType<GameSLRSample>(FindObjectsInactive.Include).gameObject;
         multiplayer.StatusChanged += SetStatus;
         multiplayer.SessionJoined += Hide;
         SetStatus(multiplayer.Status);
@@ -32,11 +34,11 @@ public class SessionMenu : MonoBehaviour
         startPanel.SetActive(true);
         replayPanel.SetActive(false);
         leaveButtonObject.SetActive(false);
+        gameMenu.SetActive(false);
     }
 
     private void OnDestroy()
     {
-        if (multiplayer == null) return;
         multiplayer.StatusChanged -= SetStatus;
         multiplayer.SessionJoined -= Hide;
     }
@@ -52,10 +54,12 @@ public class SessionMenu : MonoBehaviour
         startPanel.SetActive(false);
         replayPanel.SetActive(false);
         leaveButtonObject.SetActive(true);
+        gameMenu.SetActive(true);
     }
 
     private void Leave()
     {
+        gameMenu.SetActive(false);
         multiplayer.Leave();
         replayPanel.SetActive(false);
         leaveButtonObject.SetActive(false);
@@ -64,6 +68,7 @@ public class SessionMenu : MonoBehaviour
 
     public void ShowResult(bool won)
     {
+        gameMenu.SetActive(false);
         result.text = won ? "You win!" : "You lose!";
         leaveButtonObject.SetActive(false);
         replayPanel.SetActive(true);

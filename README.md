@@ -27,3 +27,21 @@ Another useful package is the Multiplayer Play Mode package, which allows you to
 For setting up Matchmaker, we need to take a few additional steps.
 Under products, enter the matchmaker menu. You should see a step-by-step guide, so start with the "integrate matchmaker" step, and choose Unity and SDK, and hit next until you can finish (the rest is already done). Next, create a queue (the name of the queue will be used to create matches), and choose the max players on a ticket (max group that can queue together, usually 1 unless you have a party system or something). 
 Then, you can create a pool, and name it something different and set a timeout (30 or 60 seconds usually). For hosting, select client hosting (for this guide, if you are using a different approach you can choose something else), and then you are taken to the match definition page. Name your match, and choose the number of players per team and the number of teams. You will then be able to use this queue and pool for automatic matchmaking!
+
+## Project Info
+
+The `Assets/General/` Folder contains useful scripts and prefabs for setting up any multiplayer game.
+- `MultiplayerManager.cs` handles basic matchmaking and multiplayer tasks, such as initialization, authentication, and session creation.
+- `SessionMenu.cs` works with the `Session Menu.prefab` to handle button options and display information relating to the matchmaking process. It works directly with MultiplayerManager.
+- `WordBank.cs` holds a list of words used to advance gameplay, and keeps track of progress and other information across the network.
+
+Individual Scenes have more prefabs, assets, and scripts included.
+For example, `Assets/RacingGame/` contains the prefabs, assets, and a scene that is a functional SL race car game!
+These scenes use the existing generic tools to create a full game loop.
+- Do take note of scripts like `RaceCar.cs`. These are the NetworkBehaviour scripts that run on Netcode player prefabs.
+    - This one instantiates cars in different positions and with different sprites based on the player order, then handles movement across clients.
+    - These scripts are the ones you will most heavily need to modify to accomodate whatever custom game logic you have. (you can edit the others still, of course)
+
+### SLRTk
+
+You will need to get access and import the package for SLRTk independently.
