@@ -8,7 +8,7 @@ using UnityEngine;
 public class MultiplayerManager : MonoBehaviour
 {
     private ISession session;
-    [SerializeField] private string queueName = "RaceQueue";
+    [SerializeField] private string queueName = "RacingQueue";
     [SerializeField] private int maxPlayers = 3;
     private bool busy;
 

@@ -32,10 +32,12 @@ Then, you can create a pool, and name it something different and set a timeout (
 
 The `Assets/General/` Folder contains useful scripts and prefabs for setting up any multiplayer game.
 - `MultiplayerManager.cs` handles basic matchmaking and multiplayer tasks, such as initialization, authentication, and session creation.
+    - This script doesn't handle some common edge cases like mid-round disconnects, as it depends on the desired game logic how exactly that should be implemented.
+    - However, the matchmaker system makes these fixes relatively manageable.
 - `SessionMenu.cs` works with the `Session Menu.prefab` to handle button options and display information relating to the matchmaking process. It works directly with MultiplayerManager.
 - `WordBank.cs` holds a list of words used to advance gameplay, and keeps track of progress and other information across the network.
 
-Individual Scenes have more prefabs, assets, and scripts included.
+Individual Scenes (more to come!) have more prefabs, assets, and scripts included.
 For example, `Assets/RacingGame/` contains the prefabs, assets, and a scene that is a functional SL race car game!
 These scenes use the existing generic tools to create a full game loop.
 - Do take note of scripts like `RaceCar.cs`. These are the NetworkBehaviour scripts that run on Netcode player prefabs.

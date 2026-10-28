@@ -5,7 +5,7 @@ public class RaceCar : NetworkBehaviour
 {
     [SerializeField] private Sprite[] sprites;
     [SerializeField] private float laneSpacing = 1.5f;
-    [SerializeField] private float stepDistance = 0.75f;
+    [SerializeField] private float stepDistance = 0.7f;
 
     private readonly NetworkVariable<int> lane = new NetworkVariable<int>();
     private readonly NetworkVariable<bool> won = new NetworkVariable<bool>();
